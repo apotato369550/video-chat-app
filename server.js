@@ -15,10 +15,15 @@ app.get("/:room", (req, res) => {
     res.render("room", { roomId: req.params.room })
 })
 
+
+// fix error here
 io.on("connection", socket => {
-    socket.on("join-room", (roomId, userId => {
+    socket.on("join-room", (roomId, userId) => {
         console.log(roomId, userId)
-    }))
+        socket.join(roomId)
+        // broadcast don't work
+        socket.to(roomId).emit("user-connected", userId)
+    })
 })
 
 server.listen(3000)

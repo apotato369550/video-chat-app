@@ -17,12 +17,20 @@ app.get("/:room", (req, res) => {
 
 
 // fix error here
+// this don't work???
+// revert changes??
 io.on("connection", socket => {
     socket.on("join-room", (roomId, userId) => {
         console.log(roomId, userId)
         socket.join(roomId)
         // broadcast don't work
         socket.to(roomId).emit("user-connected", userId)
+
+        socket.on("disconnect", () => {
+            console.log('DISCONNECTING')
+            socket.to(roomId).emit("user-disconnected", userId)
+            // changing this yields problems^^^
+        })
     })
 })
 
